@@ -21,6 +21,8 @@
  */
 #pragma once
 
+#define CONFIG_EXAMPLES_DIR "Artillery/Sidewinder X1"
+
 /**
  * Configuration_adv.h
  *
@@ -480,7 +482,7 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1
+#define E0_AUTO_FAN_PIN 7
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -515,12 +517,17 @@
   #define INVERT_CASE_LIGHT false             // Set true if Case Light is ON when pin is LOW
   #define CASE_LIGHT_DEFAULT_ON true          // Set default power-up state on
   #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105   // Set default power-up brightness (0-255, requires PWM pin)
-  //#define CASE_LIGHT_MAX_PWM 128            // Limit pwm
-  //#define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
   //#define CASE_LIGHT_NO_BRIGHTNESS          // Disable brightness control. Enable for non-PWM lighting.
-  //#define CASE_LIGHT_USE_NEOPIXEL           // Use NeoPixel LED as case light, requires NEOPIXEL_LED.
-  #if ENABLED(CASE_LIGHT_USE_NEOPIXEL)
-    #define CASE_LIGHT_NEOPIXEL_COLOR { 255, 255, 255, 255 } // { Red, Green, Blue, White }
+  //#define CASE_LIGHT_MAX_PWM 128            // Limit PWM duty cycle (0-255)
+  //#define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
+  #if ENABLED(NEOPIXEL_LED)
+    //#define CASE_LIGHT_USE_NEOPIXEL         // Use NeoPixel LED as case light
+  #endif
+  #if EITHER(RGB_LED, RGBW_LED)
+    //#define CASE_LIGHT_USE_RGB_LED          // Use RGB / RGBW LED as case light
+  #endif
+  #if EITHER(CASE_LIGHT_USE_NEOPIXEL, CASE_LIGHT_USE_RGB_LED)
+    #define CASE_LIGHT_DEFAULT_COLOR { 255, 255, 255, 255 } // { Red, Green, Blue, White }
   #endif
 #endif
 
@@ -579,7 +586,7 @@
 //
 // For Z set the number of stepper drivers
 //
-#define NUM_Z_STEPPER_DRIVERS 1   // (1-4) Z options change based on how many
+#define NUM_Z_STEPPER_DRIVERS 2   // (1-4) Z options change based on how many
 
 #if NUM_Z_STEPPER_DRIVERS > 1
   // Enable if Z motor direction signals are the opposite of Z1
@@ -672,7 +679,7 @@
 
 //#define HOMING_BACKOFF_POST_MM { 2, 2, 2 }  // (mm) Backoff from endstops after homing
 
-//#define QUICK_HOME                          // If G28 contains XY do a diagonal move first
+#define QUICK_HOME                            // If G28 contains XY do a diagonal move first
 //#define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
 //#define HOME_Z_FIRST                        // Home Z first. Requires a Z-MIN endstop (not a probe).
 //#define CODEPENDENT_XY_HOMING               // If X/Y can't home without homing Y/X first
@@ -798,7 +805,7 @@
 
   // On a 300mm bed a 5% grade would give a misalignment of ~1.5cm
   #define G34_MAX_GRADE              5    // (%) Maximum incline that G34 will handle
-  #define Z_STEPPER_ALIGN_ITERATIONS 5    // Number of iterations to apply during alignment
+  #define Z_STEPPER_ALIGN_ITERATIONS 3    // Number of iterations to apply during alignment
   #define Z_STEPPER_ALIGN_ACC        0.02 // Stop iterating early if the accuracy is better than this
   #define RESTORE_LEVELING_AFTER_G34      // Restore leveling after G34 is done?
   // After G34, re-home Z (G28 Z) or just calculate it from the last probe heights?
@@ -990,7 +997,7 @@
  * vibration and surface artifacts. The algorithm adapts to provide the best possible step smoothing at the
  * lowest stepping frequencies.
  */
-//#define ADAPTIVE_STEP_SMOOTHING
+#define ADAPTIVE_STEP_SMOOTHING
 
 /**
  * Custom Microstepping
@@ -1675,11 +1682,11 @@
  *
  * Warning: Does not respect endstops!
  */
-//#define BABYSTEPPING
+#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
   //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
   //#define BABYSTEP_WITHOUT_HOMING
-  //#define BABYSTEP_ALWAYS_AVAILABLE       // Allow babystepping at all times (not just during movement).
+  #define BABYSTEP_ALWAYS_AVAILABLE         // Allow babystepping at all times (not just during movement).
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
   //#define BABYSTEP_MILLIMETER_UNITS       // Specify BABYSTEP_MULTIPLICATOR_(XY|Z) in mm instead of micro-steps
@@ -2571,7 +2578,7 @@
    * Define your own with:
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V        // All axes (override below)
+  #define CHOPPER_TIMING CHOPPER_DEFAULT_24V        // All axes (override below)
   //#define CHOPPER_TIMING_X  CHOPPER_DEFAULT_12V   // For X Axes (override below)
   //#define CHOPPER_TIMING_X2 CHOPPER_DEFAULT_12V
   //#define CHOPPER_TIMING_Y  CHOPPER_DEFAULT_12V   // For Y Axes (override below)
@@ -3152,6 +3159,16 @@
 #endif
 
 /**
+ * Synchronous Laser Control with M106/M107
+ *
+ * By default M106 / M107 applies the new fan speed immediately. This is fine
+ * for fans, but unsuitable for a PWM/TTL laser attached to the fan header.
+ *
+ * NOTE: This option sacrifices some cooling fan speed options.
+ */
+//#define LASER_SYNCHRONOUS_M106_M107
+
+/**
  * Coolant Control
  *
  * Add the M7, M8, and M9 commands to turn mist or flood coolant on and off.
@@ -3359,7 +3376,7 @@
   //#define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "Home & UBL Info"
-  #define USER_GCODE_1 "G28\nG29W"
+  #define USER_GCODE_1 "G28\nG29 W"
 
   #define USER_DESC_2 "Preheat for " PREHEAT_1_LABEL
   #define USER_GCODE_2 "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
