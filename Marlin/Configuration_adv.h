@@ -2225,49 +2225,49 @@
 #if HAS_DRIVER(TMC26X)
 
   #if AXIS_DRIVER_TYPE_X(TMC26X)
-    #define X_MAX_CURRENT     1000  // (mA)
+    #define X_MAX_CURRENT     1200  // (mA)
     #define X_SENSE_RESISTOR    91  // (mOhms)
     #define X_MICROSTEPS        16  // Number of microsteps
   #endif
 
   #if AXIS_DRIVER_TYPE_X2(TMC26X)
-    #define X2_MAX_CURRENT    1000
+    #define X2_MAX_CURRENT    1200
     #define X2_SENSE_RESISTOR   91
     #define X2_MICROSTEPS       16
   #endif
 
   #if AXIS_DRIVER_TYPE_Y(TMC26X)
-    #define Y_MAX_CURRENT     1000
+    #define Y_MAX_CURRENT     1200
     #define Y_SENSE_RESISTOR    91
     #define Y_MICROSTEPS        16
   #endif
 
   #if AXIS_DRIVER_TYPE_Y2(TMC26X)
-    #define Y2_MAX_CURRENT    1000
+    #define Y2_MAX_CURRENT    1200
     #define Y2_SENSE_RESISTOR   91
     #define Y2_MICROSTEPS       16
   #endif
 
   #if AXIS_DRIVER_TYPE_Z(TMC26X)
-    #define Z_MAX_CURRENT     1000
+    #define Z_MAX_CURRENT     1200
     #define Z_SENSE_RESISTOR    91
     #define Z_MICROSTEPS        16
   #endif
 
   #if AXIS_DRIVER_TYPE_Z2(TMC26X)
-    #define Z2_MAX_CURRENT    1000
+    #define Z2_MAX_CURRENT    1200
     #define Z2_SENSE_RESISTOR   91
     #define Z2_MICROSTEPS       16
   #endif
 
   #if AXIS_DRIVER_TYPE_Z3(TMC26X)
-    #define Z3_MAX_CURRENT    1000
+    #define Z3_MAX_CURRENT    1200
     #define Z3_SENSE_RESISTOR   91
     #define Z3_MICROSTEPS       16
   #endif
 
   #if AXIS_DRIVER_TYPE_Z4(TMC26X)
-    #define Z4_MAX_CURRENT    1000
+    #define Z4_MAX_CURRENT    1200  
     #define Z4_SENSE_RESISTOR   91
     #define Z4_MICROSTEPS       16
   #endif
